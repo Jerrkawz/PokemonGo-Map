@@ -64,6 +64,8 @@ class Pokemon(BaseModel):
     latitude = DoubleField()
     longitude = DoubleField()
     disappear_time = DateTimeField()
+    rarity = IntegerField()
+    distance = DoubleField()
 
     @classmethod
     def get_active(cls, swLat, swLng, neLat, neLng):
@@ -235,7 +237,9 @@ def parse_map(map_dict, iteration_num, step, step_location):
                     'pokemon_id': p['pokemon_data']['pokemon_id'],
                     'latitude': p['latitude'],
                     'longitude': p['longitude'],
-                    'disappear_time': d_t
+                    'disappear_time': d_t,
+                    'rarity': 0,
+                    'distance': 0.0
                 }
 
         if iteration_num > 0 or step > 50:
