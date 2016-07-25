@@ -546,10 +546,50 @@ function clearStaleMarkers() {
     });
 };
 
+function sortListByName() {
+    var pokes = $.map(map_data.pokemons, function(value, index) { return [value]; });
+    pokes.sort(function(a,b) {
+        if(a.pokemon_name < b.pokemon_name) return -1;
+        if(a.pokemon_name > b.pokemon_name) return 1;
+        return 0;
+    });
+    return pokes;
+}
+
+function sortListByDistance() {
+    var pokes = $.map(map_data.pokemons, function(value, index) { return [value]; });
+    pokes.sort(function(a,b) { return a.distance - b.distance });
+    return pokes;
+}
+
+function sortListByRarity() {
+    var pokes = $.map(map_data.pokemons, function(value, index) { return [value]; });
+    pokes.sort(function(a,b) { return a.rarity - b.rarity});
+    return pokes;
+}
+
+function sortListById() {
+    var pokes = $.map(map_data.pokemons, function(value, index) { return [value]; });
+    pokes.sort(function(a,b) { return a.pokemon_id - b.pokemon_id});
+    return pokes;
+}
+
 function updateList() {
+    var sort_func = $("#list-sort").val();
+    var pokes = [];
+    if(sort_func === "alphabetical") {
+        pokes = sortListByName();
+    } else if (sort_func === "distance") {
+        pokes = sortListByDistance();
+    } else if (sort_func === "rarity") {
+        pokes = sortListByRarity();
+    } else if (sort_func === "id") {
+        pokes = sortListById();
+    }
+
     // Clear out the existing body of the list
     $('#list-content').html('');
-    $.each(map_data.pokemons, function(key, value) {
+    $.each(pokes, function(index, value) {
         $('#list-content').append(getListCard(value));
     });
     $('a[href="#hide"]').on('click', function(event){
@@ -630,6 +670,25 @@ function processPokemons(i, item) {
         if (item.marker) item.marker.setMap(null);
         item.marker = setupPokemonMarker(item);
         map_data.pokemons[item.encounter_id] = item;
+        item.rarity = assignRarity(item);
+        item.distance = getPointDistance(item.marker.getPosition(), map.getCenter());
+    }
+}
+
+function assignRarity(item) {
+    var rare_ref = ['Ivysaur', 'Venusaur', 'Charmeleon', 'Charizard', 'Wartortle', 'Blastoise', 'Beedrill', 'Arbok', 'Pikachu', 'Raichu', 'Sandslash', 'Nidoqueen', 'Nidoking', 'Clefable', 'Ninetales', 'Wigglytuff', 'Vileplume', 'Venomoth', 'Dugtrio', 'Persian', 'Golduck', 'Primeape', 'Arcanine', 'Poliwrath', 'Alakazam', 'Machamp', 'Victreebell', 'Golem', 'Ponyta', 'Rapidash', 'Slowbro', 'Magneton', 'Farfetch\'d', 'Doduo', 'Dodrio', 'Dewgong', 'Grimer', 'Muk', 'Cloyster', 'Gengar', 'Onix', 'Kingler', 'Voltorb', 'Electrode', 'Exeggcute', 'Exeggutor', 'Marowak', 'Hitmonlee', 'Lickitung', 'Weezing', 'Rhydon', 'Chansey', 'Tangela', 'Kangaskhan', 'Seadra', 'Starmie', 'Mr. Mime', 'Scyther', 'Jynx', 'Magmar', 'Pinsir', 'Tauros', 'Gyarados', 'Lapras', 'Ditto', 'Vaporeon', 'Jolteon', 'Flareon', 'Porygon', 'Omanyte', 'Omastar', 'Kabuto', 'Kabutops', 'Aerodactyl', 'Snorlax', 'Articuno', 'Zapdos', 'Moltres', 'Dragonair', 'Dragonite', 'Mew', 'Mewtwo'];
+    var med_ref = ['Bulbasaur', 'Charmander', 'Squirtle', 'Pidgeot', 'Ekans', 'Sandshrew', 'Vulpix', 'Gloom', 'Parasect', 'Diglett', 'Growlithe', 'Poliwhirl', 'Kadabra', 'Machoke', 'Weepinbell', 'Tentacruel', 'Graveler', 'Magnemite', 'Seel', 'Haunter', 'Hypno', 'Cubone', 'Hitmonchan', 'Koffing', 'Seaking', 'Electabuzz', 'Dratini'];
+    var common_ref = ['Metapod', 'Kakuna', 'Pidgeotto', 'Raticate', 'Fearow', 'Nidorino', 'Nidorina', 'Clefairy', 'Jigglypuff', 'Golbat', 'Oddish', 'Venonat', 'Meowth', 'Psyduck', 'Mankey', 'Poliwag', 'Abra', 'Machop', 'Bellsprout', 'Tentacool', 'Geodude', 'Slowpoke', 'Shellder', 'Krabby', 'Rhyhorn', 'Horsea', 'Goldeen', 'Staryu', 'Magikarp', 'Eevee'];
+    var trash_ref = ['Caterpie', 'Weedle', 'Pidgey', 'Rattata', 'Spearow', 'Nidoran♀', 'Nidoran♂', 'Zubat', 'Paras', 'Gastly', 'Drowzee'];
+
+    if (rare_ref.indexOf(idToPokemon[item.pokemon_id]) >= 0) {
+        return 1;
+    } else if (med_ref.indexOf(idToPokemon[item.pokemon_id]) >= 0) {
+        return 2;
+    } else if (common_ref.indexOf(idToPokemon[item.pokemon_id]) >= 0) {
+        return 3;
+    } else {
+        return 4;
     }
 }
 
@@ -931,6 +990,7 @@ $(function () {
 
     $selectExclude = $("#exclude-pokemon");
     $selectNotify  = $("#notify-pokemon");
+    $sortFunc = $("#list-sort");
 
     // Load pokemon names and populate lists
     $.getJSON("static/locales/pokemon." + language + ".json").done(function(data) {
@@ -951,6 +1011,7 @@ $(function () {
             placeholder: "Select Pokémon",
             data: pokeList
         });
+        $sortFunc.select2();
 
         // setup list change behavior now that we have the list to work from
         $selectExclude.on("change", function (e) {
@@ -962,6 +1023,9 @@ $(function () {
         $selectNotify.on("change", function (e) {
             notifiedPokemon = $selectNotify.val().map(Number);
             localStorage.remember_select_notify = JSON.stringify(notifiedPokemon);
+        });
+        $sortFunc.on("change", function(e) {
+            updateList();
         });
 
         // recall saved lists
