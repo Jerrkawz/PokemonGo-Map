@@ -1133,19 +1133,4 @@ function getListCard(pokemon) {
            <span class="hide_pokemon"><a href="#hide" data-id="${pokemon.pokemon_id}">Hide</a></span>
           </div>
         </div>`;
-=======
-function getListCard(pokemon) {
-  var date = new Date(pokemon.disappear_time);
-  return `
-     <div class="card">
-       <span class="image"><img src="/static/icons/${pokemon.pokemon_id}.png"/></span>
-       <span class="pokemon_name">${pokemon.pokemon_name}</span>
-       <span class="pokemon_id"><a href='http://www.pokemon.com/us/pokedex/${pokemon.pokemon_id}' target='_blank' title='View in Pokedex'>#${pokemon.pokemon_id}</a></span>
-       <div>
-        <span class="pokemon_time">${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}</span>
-        <span class="hide_pokemon"><a href="#hide" data-id="${pokemon.pokemon_id}">Hide</a></span>
-       </div>
-     </div>
-  `;
->>>>>>> 4ba7d883488085b0d6264ebfe402763bd87075aa
 }
