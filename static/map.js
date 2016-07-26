@@ -517,22 +517,6 @@ function addListeners(marker) {
     return marker
 };
 
-function updateList() {
-  // Clear out the existing body of the list
-  $('#list-content').html('');
-  $.each(map_pokemons, function(key, value) {
-    $('#list-content').append(getListCard(value));
-  });
-  $('a[href="#hide"]').on('click', function(event){
-    var anchor = event.currentTarget;
-    var id = anchor.dataset.id;
-    var old = $selectExclude.val();
-       if (old.indexOf(id) == -1) {
-         $selectExclude.val(old.concat(id)).trigger("change");
-       }
-  });
-}
-
 function clearStaleMarkers() {
     $.each(map_data.pokemons, function(key, value) {
 
@@ -686,7 +670,7 @@ function processPokemons(i, item) {
         item.marker = setupPokemonMarker(item);
         map_data.pokemons[item.encounter_id] = item;
         item.rarity = assignRarity(item);
-        item.distance = getPointDistance(item.marker.getPosition(), map.getCenter());
+        item.distance = getPointDistance(item.marker.getPosition(), marker.getPosition());
     }
 }
 
