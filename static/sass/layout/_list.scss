@@ -52,4 +52,20 @@
       text-decoration: none;
     }
   }
+  #list-hdr {
+    display: flex;
+    #list-sort {
+      flex: 1;
+      width: 90%;
+      left: 0;
+    }
+    > a {
+      &[href="#list-options"] {
+        @include icon('\f013');
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+        padding-right: 5px;
+        padding-left: 5px;
+      }
+    }
+  }
 }
