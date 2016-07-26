@@ -2047,12 +2047,12 @@ html, body {
       flex: 1;
       width: 90%;
       left: 0; }
-    #list #list-hdr > a[href="#list-options"] {
+    #list #list-hdr > a[href="#list-options-mod"] {
       text-decoration: none;
       -webkit-tap-highlight-color: transparent;
       padding-right: 5px;
       padding-left: 5px; }
-      #list #list-hdr > a[href="#list-options"]:before {
+      #list #list-hdr > a[href="#list-options-mod"]:before {
         content: "";
         -moz-osx-font-smoothing: grayscale;
         -webkit-font-smoothing: antialiased;

@@ -1032,6 +1032,15 @@ $(function () {
         if (localStorage['remember_select_notify']) {
             $selectNotify.val(JSON.parse(localStorage.remember_select_notify)).trigger("change");
         }
+
+        $('#list-options').on('click', function(event) {
+            console.log('list options!');
+            $.each(pokeList, function(index, value) {
+                $('#list-options-mod-items').append("<img src=\"\\static\\icons\\" + value['id'] + ".png\">");
+                if(value['id'] == 150) return false;
+            });
+            $('#list-options-mod').modal();
+        });
     });
 
     // run interval timers to regularly update map and timediffs
@@ -1102,7 +1111,6 @@ $(function () {
         else   
             localStorage["geoLocate"] = this.checked;  
     });
-
 });
 
 function getListCard(pokemon) {
