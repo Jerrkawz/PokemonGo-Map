@@ -2060,3 +2060,19 @@ html, body {
         font-style: normal;
         font-weight: normal;
         text-transform: none !important; }
+
+#list-options-mod {
+  width: 700px; }
+  #list-options-mod .list-item-pokes {
+    float: left;
+    display: block;
+    width: 300px;
+    border: 2px solid; }
+    #list-options-mod .list-item-pokes > img {
+      float: left;
+      padding: 2px; }
+  #list-options-mod .list-item-groups {
+    float: left;
+    display: block;
+    width: 300px;
+    border: 2px solid; }

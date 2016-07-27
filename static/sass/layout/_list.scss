@@ -69,3 +69,23 @@
     }
   }
 }
+#list-options-mod {
+  width: 700px;
+  .list-item-pokes {
+    float: left;
+    display: block;
+    width: 300px;
+    border: 2px solid;
+
+    > img {
+      float: left;
+      padding: 2px;
+    }
+  }
+  .list-item-groups {
+    float: left;
+    display: block;
+    width: 300px;
+    border: 2px solid;
+  }
+}
