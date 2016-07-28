@@ -688,7 +688,7 @@ function processPokemons(i, item) {
 }
 
 function assignRarity(item) {
-    var rare_ref = ['Ivysaur', 'Venusaur', 'Charmeleon', 'Charizard', 'Wartortle', 'Blastoise', 'Butterfree', 'Beedrill', 'Arbok', 'Pikachu', 'Raichu', 'Sandslash', 'Nidoqueen', 'Nidoking', 'Clefable', 'Ninetales', 'Wigglytuff', 'Vileplume', 'Venomoth', 'Dugtrio', 'Persian', 'Golduck', 'Primeape', 'Arcanine', 'Poliwrath', 'Alakazam', 'Machamp', 'Victreebell', 'Golem', 'Ponyta', 'Rapidash', 'Slowbro', 'Magneton', 'Farfetch\'d', 'Doduo', 'Dodrio', 'Dewgong', 'Grimer', 'Muk', 'Cloyster', 'Gengar', 'Onix', 'Kingler', 'Voltorb', 'Electrode', 'Exeggcute', 'Exeggutor', 'Marowak', 'Hitmonlee', 'Lickitung', 'Weezing', 'Rhydon', 'Chansey', 'Tangela', 'Kangaskhan', 'Seadra', 'Starmie', 'Mr. Mime', 'Scyther', 'Jynx', 'Magmar', 'Pinsir', 'Tauros', 'Gyarados', 'Lapras', 'Ditto', 'Vaporeon', 'Jolteon', 'Flareon', 'Porygon', 'Omanyte', 'Omastar', 'Kabuto', 'Kabutops', 'Aerodactyl', 'Snorlax', 'Articuno', 'Zapdos', 'Moltres', 'Dragonair', 'Dragonite', 'Mew', 'Mewtwo'];
+    var rare_ref = ['Ivysaur', 'Venusaur', 'Charmeleon', 'Charizard', 'Wartortle', 'Blastoise', 'Butterfree', 'Beedrill', 'Arbok', 'Pikachu', 'Raichu', 'Sandslash', 'Nidoqueen', 'Nidoking', 'Clefable', 'Ninetales', 'Wigglytuff', 'Vileplume', 'Venomoth', 'Dugtrio', 'Persian', 'Golduck', 'Primeape', 'Arcanine', 'Poliwrath', 'Alakazam', 'Machamp', 'Victreebel', 'Golem', 'Ponyta', 'Rapidash', 'Slowbro', 'Magneton', 'Farfetch\'d', 'Doduo', 'Dodrio', 'Dewgong', 'Grimer', 'Muk', 'Cloyster', 'Gengar', 'Onix', 'Kingler', 'Voltorb', 'Electrode', 'Exeggcute', 'Exeggutor', 'Marowak', 'Hitmonlee', 'Lickitung', 'Weezing', 'Rhydon', 'Chansey', 'Tangela', 'Kangaskhan', 'Seadra', 'Starmie', 'Mr. Mime', 'Scyther', 'Jynx', 'Magmar', 'Pinsir', 'Tauros', 'Gyarados', 'Lapras', 'Ditto', 'Vaporeon', 'Jolteon', 'Flareon', 'Porygon', 'Omanyte', 'Omastar', 'Kabuto', 'Kabutops', 'Aerodactyl', 'Snorlax', 'Articuno', 'Zapdos', 'Moltres', 'Dragonair', 'Dragonite', 'Mew', 'Mewtwo'];
     var med_ref = ['Bulbasaur', 'Charmander', 'Squirtle', 'Pidgeot', 'Ekans', 'Sandshrew', 'Vulpix', 'Gloom', 'Parasect', 'Diglett', 'Growlithe', 'Poliwhirl', 'Kadabra', 'Machoke', 'Weepinbell', 'Tentacruel', 'Graveler', 'Magnemite', 'Seel', 'Haunter', 'Hypno', 'Cubone', 'Hitmonchan', 'Koffing', 'Seaking', 'Electabuzz', 'Dratini'];
     var common_ref = ['Metapod', 'Kakuna', 'Pidgeotto', 'Raticate', 'Fearow', 'Nidorino', 'Nidorina', 'Clefairy', 'Jigglypuff', 'Golbat', 'Oddish', 'Venonat', 'Meowth', 'Psyduck', 'Mankey', 'Poliwag', 'Abra', 'Machop', 'Bellsprout', 'Tentacool', 'Geodude', 'Slowpoke', 'Shellder', 'Krabby', 'Rhyhorn', 'Horsea', 'Goldeen', 'Staryu', 'Magikarp', 'Eevee'];
     var trash_ref = ['Caterpie', 'Weedle', 'Pidgey', 'Rattata', 'Spearow', 'Nidoran♀', 'Nidoran♂', 'Zubat', 'Paras', 'Gastly', 'Drowzee'];
@@ -1045,6 +1045,15 @@ $(function () {
         if (localStorage['remember_select_notify']) {
             $selectNotify.val(JSON.parse(localStorage.remember_select_notify)).trigger("change");
         }
+
+        $('#list-options').on('click', function(event) {
+            console.log('list options!');
+            $.each(pokeList, function(index, value) {
+                $('#list-options-mod-items').append("<img src=\"\\static\\icons\\" + value['id'] + ".png\">");
+                if(value['id'] == 150) return false;
+            });
+            $('#list-options-mod').modal();
+        });
     });
 
     // run interval timers to regularly update map and timediffs
@@ -1115,7 +1124,6 @@ $(function () {
         else   
             localStorage["geoLocate"] = this.checked;  
     });
-
 });
 
 function getListCard(pokemon) {

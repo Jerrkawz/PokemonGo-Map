@@ -30,6 +30,7 @@
 		<!-- retina iPhone 6 iOS 7 -->
 		<link rel="apple-touch-icon" href="static/appicons/180x180.png" sizes="180x180">
 
+		<link rel="stylesheet" href="static/dist/css/jquery.modal.css">
 		<link rel="stylesheet" href="static/dist/css/app.min.css">
 		<script src="static/js/vendor/modernizr.custom.js"></script>
 	</head>
@@ -52,7 +53,8 @@
 					<option value="distance">Distance</option>
 					<option value="rarity">Rarity</option>
 				</select>
-				<a href="#list_options"></a></div>
+				<a href="#list-options-mod" id="list-options" rel="modal:open"></a>
+			</div>
 			<div id="list-content"></div>
 		</nav>
 		<!-- NAV -->
@@ -172,6 +174,11 @@
 		</nav>
 
 		<div id="map"></div>
+		<div id="list-options-mod" class="modal" style="display: none;">
+			<h3>IT WORKED!</h3>
+			<div id="list-options-mod-items" class="list-item-pokes"></div>
+			<div id="list-options-mod-grp1" class="list-item-groups"></div>
+		</div>
 	</div>
 
 	<!-- Scripts -->
@@ -181,6 +188,7 @@
 
 	<script src="static/dist/js/app.min.js"></script>
 	<script src="static/js/vendor/classie.js"></script>
+	<script src="static/js/vendor/jquery.modal.js"></script>
 
 	<script>
 		var center_lat = {{lat}};

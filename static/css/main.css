@@ -2043,3 +2043,38 @@ html, body {
     #list .hide_pokemon > a {
       color: #b20a31;
       text-decoration: none; }
+  #list #list-hdr {
+    display: flex; }
+    #list #list-hdr #list-sort {
+      flex: 1;
+      width: 90%;
+      left: 0; }
+    #list #list-hdr > a[href="#list-options-mod"] {
+      text-decoration: none;
+      -webkit-tap-highlight-color: transparent;
+      padding-right: 5px;
+      padding-left: 5px; }
+      #list #list-hdr > a[href="#list-options-mod"]:before {
+        content: "";
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-font-smoothing: antialiased;
+        font-family: FontAwesome;
+        font-style: normal;
+        font-weight: normal;
+        text-transform: none !important; }
+
+#list-options-mod {
+  width: 700px; }
+  #list-options-mod .list-item-pokes {
+    float: left;
+    display: block;
+    width: 300px;
+    border: 2px solid; }
+    #list-options-mod .list-item-pokes > img {
+      float: left;
+      padding: 2px; }
+  #list-options-mod .list-item-groups {
+    float: left;
+    display: block;
+    width: 300px;
+    border: 2px solid; }
