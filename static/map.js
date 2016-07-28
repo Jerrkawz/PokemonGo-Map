@@ -609,7 +609,12 @@ function updateList() {
       var pokemon =  map_data.pokemons[encounter_id];
       var infoWindow = pokemon && pokemon.marker && pokemon.marker.infoWindow;
       if (infoWindow) {
-        infoWindow.open(map, pokemon.marker);
+        // This isn't documented so it may break
+        if (infoWindow.getMap()) {
+          infoWindow.close();
+        } else {
+          infoWindow.open(map, pokemon.marker);
+        }
       }
     })
 }
