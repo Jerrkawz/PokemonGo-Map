@@ -591,7 +591,9 @@ function updateList() {
     $.each(pokes, function(index, value) {
         $('#list-content').append(getListCard(value));
     });
+    // Hide click handler
     $('a[href="#hide"]').on('click', function(event){
+        event.preventDefault();
         var anchor = event.currentTarget;
         var id = anchor.dataset.id;
         var old = $selectExclude.val();
@@ -599,6 +601,17 @@ function updateList() {
             $selectExclude.val(old.concat(id)).trigger("change");
         }
     });
+    
+    // Info window click handler
+    $('div.card').on('click', function(event){
+      var div = event.currentTarget;
+      var encounter_id = div.dataset.encounter;
+      var pokemon =  map_data.pokemons[encounter_id];
+      var infoWindow = pokemon && pokemon.marker && pokemon.marker.infoWindow;
+      if (infoWindow) {
+        infoWindow.open(map, pokemon.marker);
+      }
+    })
 }
 
 function clearOutOfBoundsMarkers(markers) {
@@ -1108,7 +1121,7 @@ $(function () {
 function getListCard(pokemon) {
     var date = new Date(pokemon.disappear_time);
     return `
-        <div class="card">
+        <div class="card" data-encounter="${pokemon.encounter_id}">
           <span class="image"><img src="/static/icons/${pokemon.pokemon_id}.png"/></span>
           <span class="pokemon_name">${pokemon.pokemon_name}</span>
           <span class="pokemon_id"><a href='http://www.pokemon.com/us/pokedex/${pokemon.pokemon_id}' target='_blank' title='View in Pokedex'>#${pokemon.pokemon_id}</a></span>
