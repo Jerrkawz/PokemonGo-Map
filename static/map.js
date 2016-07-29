@@ -5,6 +5,7 @@
 
 var $selectExclude;
 var $selectNotify;
+var $sortFunc;
 
 var language = document.documentElement.lang == "" ? "en" : document.documentElement.lang;
 var idToPokemon = {};
@@ -771,7 +772,7 @@ function updateList() {
           infoWindow.open(map, pokemon.marker);
         }
       }
-    })
+    });
 }
 
 function showInBoundsMarkers(markers) {
@@ -872,6 +873,8 @@ function assignRarity(item) {
         return 3;
     } else {
         return 4;
+    }
+}
 
 function processPokestops(i, item) {
   if (!Store.get('showPokestops')) {
@@ -1233,6 +1236,7 @@ $(function() {
       data: pokeList,
       templateResult: formatState
     });
+    $sortFunc.select2();
 
     // setup list change behavior now that we have the list to work from
     $selectExclude.on("change", function(e) {

@@ -10,6 +10,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var $selectExclude;
 var $selectNotify;
+var $sortFunc;
 
 var language = document.documentElement.lang == "" ? "en" : document.documentElement.lang;
 var idToPokemon = {};
@@ -596,18 +597,90 @@ function clearStaleMarkers() {
   });
 }
 
+function sortListByName() {
+  var pokes = $.map(map_data.pokemons, function (value, index) {
+    return [value];
+  });
+  pokes.sort(function (a, b) {
+    if (a.pokemon_name < b.pokemon_name) return -1;
+    if (a.pokemon_name > b.pokemon_name) return 1;
+    return 0;
+  });
+  return pokes;
+}
+
+function sortListByDistance() {
+  var pokes = $.map(map_data.pokemons, function (value, index) {
+    return [value];
+  });
+  pokes.sort(function (a, b) {
+    return a.distance - b.distance;
+  });
+  return pokes;
+}
+
+function sortListByRarity() {
+  var pokes = $.map(map_data.pokemons, function (value, index) {
+    return [value];
+  });
+  pokes.sort(function (a, b) {
+    return a.rarity - b.rarity;
+  });
+  return pokes;
+}
+
+function sortListById() {
+  var pokes = $.map(map_data.pokemons, function (value, index) {
+    return [value];
+  });
+  pokes.sort(function (a, b) {
+    return a.pokemon_id - b.pokemon_id;
+  });
+  return pokes;
+}
+
 function updateList() {
+  var sort_func = $("#list-sort").val();
+  var pokes = [];
+  if (sort_func === "alphabetical") {
+    pokes = sortListByName();
+  } else if (sort_func === "distance") {
+    pokes = sortListByDistance();
+  } else if (sort_func === "rarity") {
+    pokes = sortListByRarity();
+  } else if (sort_func === "id") {
+    pokes = sortListById();
+  }
+
   // Clear out the existing body of the list
   $('#list-content').html('');
-  $.each(map_data.pokemons, function (key, value) {
+  $.each(pokes, function (index, value) {
     $('#list-content').append(getListCard(value));
   });
+  // Hide click handler
   $('a[href="#hide"]').on('click', function (event) {
+    event.preventDefault();
     var anchor = event.currentTarget;
     var id = anchor.dataset.id;
     var old = $selectExclude.val();
     if (old.indexOf(id) == -1) {
       $selectExclude.val(old.concat(id)).trigger("change");
+    }
+  });
+
+  // Info window click handler
+  $('div.card').on('click', function (event) {
+    var div = event.currentTarget;
+    var encounter_id = div.dataset.encounter;
+    var pokemon = map_data.pokemons[encounter_id];
+    var infoWindow = pokemon && pokemon.marker && pokemon.marker.infoWindow;
+    if (infoWindow) {
+      // This isn't documented so it may break
+      if (infoWindow.getMap()) {
+        infoWindow.close();
+      } else {
+        infoWindow.open(map, pokemon.marker);
+      }
     }
   });
 }
@@ -689,7 +762,26 @@ function processPokemons(i, item) {
     if (!item.hidden) {
       item.marker = setupPokemonMarker(item);
       map_data.pokemons[item.encounter_id] = item;
+      item.rarity = assignRarity(item);
+      item.distance = getPointDistance(item.marker.getPosition(), marker.getPosition());
     }
+  }
+}
+
+function assignRarity(item) {
+  var rare_ref = ['Ivysaur', 'Venusaur', 'Charmeleon', 'Charizard', 'Wartortle', 'Blastoise', 'Butterfree', 'Beedrill', 'Arbok', 'Pikachu', 'Raichu', 'Sandslash', 'Nidoqueen', 'Nidoking', 'Clefable', 'Ninetales', 'Wigglytuff', 'Vileplume', 'Venomoth', 'Dugtrio', 'Persian', 'Golduck', 'Primeape', 'Arcanine', 'Poliwrath', 'Alakazam', 'Machamp', 'Victreebel', 'Golem', 'Ponyta', 'Rapidash', 'Slowbro', 'Magneton', 'Farfetch\'d', 'Doduo', 'Dodrio', 'Dewgong', 'Grimer', 'Muk', 'Cloyster', 'Gengar', 'Onix', 'Kingler', 'Voltorb', 'Electrode', 'Exeggcute', 'Exeggutor', 'Marowak', 'Hitmonlee', 'Lickitung', 'Weezing', 'Rhydon', 'Chansey', 'Tangela', 'Kangaskhan', 'Seadra', 'Starmie', 'Mr. Mime', 'Scyther', 'Jynx', 'Magmar', 'Pinsir', 'Tauros', 'Gyarados', 'Lapras', 'Ditto', 'Vaporeon', 'Jolteon', 'Flareon', 'Porygon', 'Omanyte', 'Omastar', 'Kabuto', 'Kabutops', 'Aerodactyl', 'Snorlax', 'Articuno', 'Zapdos', 'Moltres', 'Dragonair', 'Dragonite', 'Mew', 'Mewtwo'];
+  var med_ref = ['Bulbasaur', 'Charmander', 'Squirtle', 'Pidgeot', 'Ekans', 'Sandshrew', 'Vulpix', 'Gloom', 'Parasect', 'Diglett', 'Growlithe', 'Poliwhirl', 'Kadabra', 'Machoke', 'Weepinbell', 'Tentacruel', 'Graveler', 'Magnemite', 'Seel', 'Haunter', 'Hypno', 'Cubone', 'Hitmonchan', 'Koffing', 'Seaking', 'Electabuzz', 'Dratini'];
+  var common_ref = ['Metapod', 'Kakuna', 'Pidgeotto', 'Raticate', 'Fearow', 'Nidorino', 'Nidorina', 'Clefairy', 'Jigglypuff', 'Golbat', 'Oddish', 'Venonat', 'Meowth', 'Psyduck', 'Mankey', 'Poliwag', 'Abra', 'Machop', 'Bellsprout', 'Tentacool', 'Geodude', 'Slowpoke', 'Shellder', 'Krabby', 'Rhyhorn', 'Horsea', 'Goldeen', 'Staryu', 'Magikarp', 'Eevee'];
+  var trash_ref = ['Caterpie', 'Weedle', 'Pidgey', 'Rattata', 'Spearow', 'Nidoran♀', 'Nidoran♂', 'Zubat', 'Paras', 'Gastly', 'Drowzee'];
+
+  if (rare_ref.indexOf(idToPokemon[item.pokemon_id]) >= 0) {
+    return 1;
+  } else if (med_ref.indexOf(idToPokemon[item.pokemon_id]) >= 0) {
+    return 2;
+  } else if (common_ref.indexOf(idToPokemon[item.pokemon_id]) >= 0) {
+    return 3;
+  } else {
+    return 4;
   }
 }
 
@@ -1020,6 +1112,7 @@ $(function () {
 
   $selectExclude = $("#exclude-pokemon");
   $selectNotify = $("#notify-pokemon");
+  $sortFunc = $("#list-sort");
   var numberOfPokemon = 151;
 
   // Load pokemon names and populate lists
@@ -1049,6 +1142,7 @@ $(function () {
       data: pokeList,
       templateResult: formatState
     });
+    $sortFunc.select2();
 
     // setup list change behavior now that we have the list to work from
     $selectExclude.on("change", function (e) {
@@ -1062,9 +1156,22 @@ $(function () {
       Store.set('remember_select_notify', notifiedPokemon);
     });
 
+    $sortFunc.on("change", function (e) {
+      updateList();
+    });
+
     // recall saved lists
     $selectExclude.val(Store.get('remember_select_exclude')).trigger("change");
     $selectNotify.val(Store.get('remember_select_notify')).trigger("change");
+
+    $('#list-options').on('click', function (event) {
+      console.log('list options!');
+      $.each(pokeList, function (index, value) {
+        $('#list-options-mod-items').append("<img src=\"\\static\\icons\\" + value['id'] + ".png\">");
+        if (value['id'] == 150) return false;
+      });
+      $('#list-options-mod').modal();
+    });
   });
 
   // run interval timers to regularly update map and timediffs
@@ -1154,6 +1261,6 @@ $(function () {
 
 function getListCard(pokemon) {
   var date = new Date(pokemon.disappear_time);
-  return "\n        <div class=\"card\">\n          <span class=\"image\"><img src=\"/static/icons/" + pokemon.pokemon_id + ".png\"/></span>\n          <span class=\"pokemon_name\">" + pokemon.pokemon_name + "</span>\n          <span class=\"pokemon_id\"><a href='http://www.pokemon.com/us/pokedex/" + pokemon.pokemon_id + "' target='_blank' title='View in Pokedex'>#" + pokemon.pokemon_id + "</a></span>\n          <div>\n           <span class=\"pokemon_time\">" + pad(date.getHours()) + ":" + pad(date.getMinutes()) + ":" + pad(date.getSeconds()) + "</span>\n           <span class=\"hide_pokemon\"><a href=\"#hide\" data-id=\"" + pokemon.pokemon_id + "\">Hide</a></span>\n          </div>\n        </div>";
+  return "\n        <div class=\"card\" data-encounter=\"" + pokemon.encounter_id + "\">\n          <span class=\"image\"><img src=\"/static/icons/" + pokemon.pokemon_id + ".png\"/></span>\n          <span class=\"pokemon_name\">" + pokemon.pokemon_name + "</span>\n          <span class=\"pokemon_id\"><a href='http://www.pokemon.com/us/pokedex/" + pokemon.pokemon_id + "' target='_blank' title='View in Pokedex'>#" + pokemon.pokemon_id + "</a></span>\n          <div>\n           <span class=\"pokemon_time\">" + pad(date.getHours()) + ":" + pad(date.getMinutes()) + ":" + pad(date.getSeconds()) + "</span>\n           <span class=\"hide_pokemon\"><a href=\"#hide\" data-id=\"" + pokemon.pokemon_id + "\">Hide</a></span>\n          </div>\n        </div>";
 }
 //# sourceMappingURL=map.js.map
