@@ -22,10 +22,6 @@
     visibility: visible;
   }
 
-  @include breakpoint(small) {
-    padding: 2.5em 1.75em;
-  }
-
   .card {
    box-shadow: 0 2px 3px rgba(0,0,0,.1),0 0 0 1px rgba(0,0,0,.1);
    padding: 5px 15px 5px 5px;

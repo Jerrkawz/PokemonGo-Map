@@ -632,7 +632,7 @@ function setupScannedMarker(item) {
   var marker = new google.maps.Circle({
     map: map,
     center: circleCenter,
-    radius: 100, // 10 miles in metres
+    radius: 70, // 10 miles in metres
     fillColor: getColorByDate(item.last_modified),
     strokeWeight: 1
   });
@@ -1236,7 +1236,9 @@ $(function() {
       data: pokeList,
       templateResult: formatState
     });
-    $sortFunc.select2();
+    
+    // Init select2, disable search bar
+    $sortFunc.select2({minimumResultsForSearch: Infinity});
 
     // setup list change behavior now that we have the list to work from
     $selectExclude.on("change", function(e) {

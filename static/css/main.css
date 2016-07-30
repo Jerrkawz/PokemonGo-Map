@@ -2133,9 +2133,6 @@ html, body {
     transform: translateX(0);
     box-shadow: 0 0 1.5em 0 rgba(0, 0, 0, 0.2);
     visibility: visible; }
-  @media screen and (max-width: 736px) {
-    #list {
-      padding: 2.5em 1.75em; } }
   #list .card {
     box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
     padding: 5px 15px 5px 5px;
